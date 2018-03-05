@@ -2,7 +2,7 @@
 Program to count all files in a directory
 
 
-To run this program open CountFilesGUI.pro with QT.
+To run this program open the file CountFilesGUI.pro with QT Creator.
 
 This program was tested on Ubuntu Linux
 
