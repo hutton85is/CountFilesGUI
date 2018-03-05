@@ -27,11 +27,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    // vector for all working threads
-    std::vector<QThread*> threadVec;
+    // Thread containing the working thread
+    QThread* thread;
 
-    // vector for all workers in progress
-    std::vector<Worker*> workerVec;
+    // worker class does the file counting through FileCounter.h class
+    Worker* worker;
 };
 
 #endif // MAINWINDOW_H

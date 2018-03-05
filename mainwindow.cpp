@@ -7,28 +7,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QThread* newthread = new QThread();
-    Worker* newworker = new Worker();
+    thread = new QThread();
+    worker = new Worker();
 
-    workerVec.push_back(newworker);
-    threadVec.push_back(newthread);
-    newworker->moveToThread(newthread);
-
-    for (unsigned int i = 0; i < workerVec.size(); i++)
-    {
-        connect(workerVec[i], SIGNAL(countFilesRequest()), threadVec[i], SLOT(start()));
-        connect(threadVec[i], SIGNAL(started()), workerVec[i], SLOT(countFiles()));
-        connect(workerVec[i], SIGNAL(filescounted(QString)), this, SLOT(addCountToWidget(QString)));
-        connect(workerVec[i], SIGNAL(finished()), threadVec[i], SLOT(quit()), Qt::DirectConnection);
-
-        if (threadVec[i]->isFinished())
-        {
-            delete threadVec[i];
-            delete workerVec[i];
-            workerVec.erase(workerVec.begin() + i);
-            threadVec.erase(threadVec.begin() + i);
-        }
-    }
+    connect(worker, SIGNAL(countFilesRequest()), thread, SLOT(start()));
+    connect(thread, SIGNAL(started()), worker, SLOT(countFiles()));
+    connect(worker, SIGNAL(filescounted(QString)), this, SLOT(addCountToWidget(QString)));
+    connect(worker, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +34,6 @@ void MainWindow::on_pushButton_clicked()
     // If user cancels choosing directory worker does not request counting files
     if (path != "/")
     {
-        workerVec[workerVec.size()-1]->startCounting(path);
+        worker->startCounting(path);
     }
 }
